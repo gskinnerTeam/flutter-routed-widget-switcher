@@ -1,0 +1,12 @@
+name: core-tests
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  drive:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: subosito/flutter-action@v1
+      with:
+        channel: 'stable' # or: 'dev' or 'beta'
+    - name: "Run Flutter Driver tests"
+      run: "flutter test"
