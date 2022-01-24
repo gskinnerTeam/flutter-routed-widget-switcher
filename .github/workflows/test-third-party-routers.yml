@@ -10,4 +10,5 @@ jobs:
         channel: 'beta' # or: 'dev' or 'beta'
     - run: |
            cd example
+           flutter config --enable-windows-desktop
            flutter test -d windows integration_test/third_party_router_tests.dart
