@@ -11,8 +11,4 @@ jobs:
     - run: |
            cd example
            flutter config --enable-windows-desktop
-           flutter test -d windows integration_test/third_party_router_tests.dart --reporter expanded --coverage
-    - uses: codecov/codecov-action@v1
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        file: example/coverage/lcov.info
+           flutter test -d windows integration_test/third_party_router_tests.dart 
