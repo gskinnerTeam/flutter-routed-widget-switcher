@@ -27,7 +27,7 @@ This is useful in 2 primary use cases:
 ## 🔨 Installation
 ```yaml
 dependencies:
-  routed_widget_switcher: ^2.0.0
+  routed_widget_switcher: ^2.0.1
 ```
 
 

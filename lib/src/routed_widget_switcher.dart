@@ -37,43 +37,26 @@ class RoutedSwitcher extends StatefulWidget {
 }
 
 class RoutedSwitcherState extends State<RoutedSwitcher> {
-  RouterDelegate? _delegate;
-  RouteInformationProvider? _provider;
-
-  @override
-  void initState() {
-    super.initState();
-    scheduleMicrotask(() {
-      _delegate = Router.of(context).routerDelegate;
-      _delegate?.addListener(_handleRouteChanged);
-      _provider = Router.of(context).routeInformationProvider;
-      _provider?.addListener(_handleRouteChanged);
-    });
-  }
-
-  @override
-  void dispose() {
-    _delegate?.removeListener(_handleRouteChanged);
-    _provider?.removeListener(_handleRouteChanged);
-    super.dispose();
-  }
-
-  void _handleRouteChanged() {
-    if (mounted == false) return;
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
-    String url = RouterUtils.getUrl(context);
-    return PathSwitcher(
-      path: url,
-      builders: widget.builders,
-      caseSensitive: widget.caseSensitive,
-      duration: widget.duration,
-      transitionBuilder: widget.transitionBuilder,
-      unknownRouteBuilder: widget.unknownRouteBuilder,
-      // relativePaths: widget.relativePaths,
+    final routeInfoProvider = Router.of(context).routeInformationProvider;
+    if (routeInfoProvider == null) throw ('RoutedSwitcher only works with Routers that have an infoProvider.');
+    return AnimatedBuilder(
+      animation: Listenable.merge(<Listenable>[
+        Router.of(context).routerDelegate,
+        routeInfoProvider,
+      ]),
+      builder: (_, __) {
+        return PathSwitcher(
+          path: RouterUtils.getUrl(context),
+          builders: widget.builders,
+          caseSensitive: widget.caseSensitive,
+          duration: widget.duration,
+          transitionBuilder: widget.transitionBuilder,
+          unknownRouteBuilder: widget.unknownRouteBuilder,
+          // relativePaths: widget.relativePaths,
+        );
+      },
     );
   }
 }

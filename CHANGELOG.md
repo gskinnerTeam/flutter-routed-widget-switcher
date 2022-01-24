@@ -1,3 +1,6 @@
+## 2.0.1
+* Improved router binding code
+
 ## 2.0.0
 * Change from PathBuilder to Routed
 * Switch to RoutedWidgetSwitcher to RoutedSwitcher
