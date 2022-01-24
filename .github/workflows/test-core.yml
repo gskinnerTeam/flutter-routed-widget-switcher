@@ -11,7 +11,7 @@ jobs:
            flutter test --reporter expanded --coverage
            cd example
            flutter test --reporter expanded --coverage
-    - uses: codecov/codecov-action@v1
+    - uses: codecov/codecov-action@v2
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./coverage/lcov.info,./example/coverage/lcov.info
