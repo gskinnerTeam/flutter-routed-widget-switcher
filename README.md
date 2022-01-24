@@ -8,6 +8,7 @@ class SideBar extends StatelessWidget {
     Widget build(_){
      return RoutedSwitcher(
         builders: (info) => [
+            // All widgets are lazy loaded...
             Routed('/', () => MainMenu()), // use a closure
             Routed('/dashboard', DashboardMenu.new), // or a tear-off :)
         ]);
@@ -35,16 +36,25 @@ Place the widget anywhere below the root `Router` widget and define the paths yo
 ```dart
 return RoutedSwitcher(
   caseSensitive: true,
-  builders: [
+  builders: (info) => [
     // use '.exact' to match only '/'
     Routed('/', MainMenu.new).exact,
-     // allow anything prefixed with `/dashboard`
+     // match anything prefixed with `/dashboard`
     Routed('/dashboard', DashboardMenu.new),
+    // use the info object to get path or query params
+    Routed('/settings', () => SettingsMenu(type: info.queryParams['type'])),
   ],
 );
 ```
+The `builders` delegate passes a `RoutedInfo` object which contains info about the current match, including:
+* url
+* matchingRoute
+* pathParams
+* queryParams
 
-#### Uknown routes
+You can also call `RoutedInfo.of(context)` from any descendant widgets to lookup the closest instance.
+
+#### Unknown routes
 Use the `unknownRouteBuilder` to handle unexpected routes. If the delegate is not provided, a `DefaultUnknownRoute` widget will be used.
 
 ## Path matching
@@ -55,18 +65,12 @@ In addition to the matching performed by `pathToRegExp`, a wildcard `*` characte
 ### Most specific match
 `RoutedSwitcher` will attempt to use the most specific match. For example,the location of `/users/new` matches all three of these builders:
 ```dart
-Routed('/users/:userId', builder: (_) => const TeamDetails()),
-Routed('/users/new', builder: (_) => const NewTeamForm()),
-Routed('*', builder: (_) => const PathNotFound()),
+Routed('/users/:userId', TeamDetails.new),
+Routed('/users/new', NewTeamForm.new),
+Routed('*', TeamStandings.new),
 ```
 Since `/users/new` is the more exact match, it will be the one to render, it does not matter which order you declare them in. `/users/:userId` would go next, with the wildcard `*` finally matching last.
 
-### Reading route info
-You can use `RoutedInfo.of(context)` to fetch the closest `RoutedInfo`, which exposes:
-* url
-* matchingRoute
-* pathParams
-* queryParams
 
 ### Transitions
 Internally Flutters `AnimatedSwitcher` widget is used for transitions, so that full API is exposed for different transition effects.
@@ -78,8 +82,8 @@ return RoutedSwitcher(
 )
 ```
 
-### Relative links and incd exaheritence
-Nested switchers are supported to any depth, and relative paths can be defined by omitting the '/' character.
+### Relative links and inheritance
+Nested switchers are supported to any depth, and relative paths can be defined by omitting the `/` character.
 ```dart
 return RoutedSwitcher(
   builders: (_) => [

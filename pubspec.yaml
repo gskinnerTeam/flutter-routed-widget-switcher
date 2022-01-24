@@ -1,6 +1,6 @@
 name: routed_widget_switcher
 description: Declaratively switch child widgets based on the current `Router` location.
-version: 1.0.4
+version: 2.0.0+4
 homepage: https://github.com/gskinnerTeam/flutter-routed-widget-switcher
 
 environment:
