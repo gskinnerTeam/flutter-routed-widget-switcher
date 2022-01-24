@@ -6,13 +6,10 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - uses: subosito/flutter-action@v1
-    - name: "Testing core..."
+    - name: "Flutter test"
       run: |
            flutter test --reporter expanded --coverage
-           cd example
-           flutter test --reporter expanded --coverage
-    - uses: codecov/codecov-action@v2
+    - name: "Uploading codecov"
+      uses: codecov/codecov-action@v2
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./coverage/lcov.info,./example/coverage/lcov.info
-        verbose: true
