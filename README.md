@@ -6,11 +6,10 @@ Declaratively switch child widgets based on the current `Router` location.
 ```dart
 class SideBar extends StatelessWidget {
     Widget build(_){
-     return RoutedWidgetSwitcher(
-        builders: [
-            PathBuilder('/', builder: (_) => const MainMenu()),
-            PathBuilder('/dashboard', builder: (_) => const DashboardMenu()),
-            PathBuilder('/settings', builder: (_) => const SettingsMenu()),
+     return RoutedSwitcher(
+        builders: (info) => [
+            Routed('/', () => MainMenu()), // use a closure
+            Routed('/dashboard', DashboardMenu.new), // or a tear-off :)
         ]);
     }
 }
@@ -27,49 +26,77 @@ This is useful in 2 primary use cases:
 ## 🔨 Installation
 ```yaml
 dependencies:
-  routed_widget_switcher: ^1.0.4
+  routed_widget_switcher: ^2.0.0
 ```
 
 
 ## 🕹️ Usage
 Place the widget anywhere below the root `Router` widget and define the paths you would like to match. By default paths are considered to be case-insensitive, and treated as prefixes, but this can be disabled:
 ```dart
-return RoutedWidgetSwitcher(
+return RoutedSwitcher(
   caseSensitive: true,
   builders: [
-    // require an exact match if prefix=false
-    PathBuilder('/', prefix: false, builder: (_) => const MainMenu()),
+    // use '.exact' to match only '/'
+    Routed('/', MainMenu.new).exact,
      // allow anything prefixed with `/dashboard`
-    PathBuilder('/dashboard', builder: (_) => const DashboardMenu()),
+    Routed('/dashboard', DashboardMenu.new),
   ],
 );
 ```
+
+#### Uknown routes
+Use the `unknownRouteBuilder` to handle unexpected routes. If the delegate is not provided, a `DefaultUnknownRoute` widget will be used.
+
 ## Path matching
 Paths can be defined as simple strings like `/user/new` or `user/:userId`, or use regular expression syntax like `r'/user/:id(\d+)'`. See `pathToRegExp` library for more details on advanced use cases: https://pub.dev/packages/path_to_regexp.
 
 In addition to the matching performed by `pathToRegExp`, a wildcard `*` character can be used to match any location.
 
 ### Most specific match
-`RoutedWidgetSwitcher` will attempt to use the most specific match. For example,the location of `/users/new` matches all three of these builders:
+`RoutedSwitcher` will attempt to use the most specific match. For example,the location of `/users/new` matches all three of these builders:
 ```dart
-PathBuilder('/users/:userId', builder: (_) => const TeamDetails()),
-PathBuilder('/users/new', builder: (_) => const NewTeamForm()),
-PathBuilder('*', builder: (_) => const PathNotFound()),
+Routed('/users/:userId', builder: (_) => const TeamDetails()),
+Routed('/users/new', builder: (_) => const NewTeamForm()),
+Routed('*', builder: (_) => const PathNotFound()),
 ```
 Since `/users/new` is the more exact match, it will be the one to render, it does not matter which order you declare them in. `/users/:userId` would go next, with the wildcard `*` finally matching last.
 
-### Getting current location
-This package includes a `RouterUtils.getLocation(context)` method which will return the current router location if you would like to read it for some reason.
+### Reading route info
+You can use `RoutedInfo.of(context)` to fetch the closest `RoutedInfo`, which exposes:
+* url
+* matchingRoute
+* pathParams
+* queryParams
 
-## Transitions
+### Transitions
 Internally Flutters `AnimatedSwitcher` widget is used for transitions, so that full API is exposed for different transition effects.
 ```dart
-return RoutedWidgetSwitcher(
+return RoutedSwitcher(
   transitionBuilder: ...
   duration: ...,
-  builders: [],
+  builders: ...,
 )
 ```
+
+### Relative links and incd exaheritence
+Nested switchers are supported to any depth, and relative paths can be defined by omitting the '/' character.
+```dart
+return RoutedSwitcher(
+  builders: (_) => [
+    Routed(
+      '/messages',
+      () => RoutedSwitcher(
+        builders: (_) => [
+          Routed('', Inbox.new), // -> /messages/
+          Routed('inbox', Inbox.new), // -> /messages/inbox
+          Routed('outbox', Outbox.new), // -> /messages/outbox
+        ],
+      ),
+    ),
+  ],
+);
+```
+
 
 
  ## 🐞 Bugs/Requests

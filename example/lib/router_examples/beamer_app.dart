@@ -33,7 +33,7 @@ class BeamerAppState extends State<BeamerApp> {
   _buildEmptyBeamer(context, state, data) {
     return Beamer(
       routerDelegate: BeamerDelegate(
-          notFoundPage: BeamPage(child: PageScaffoldWithInstructions(state.uri.path)),
+          notFoundPage: BeamPage(child: PageScaffoldWithInstructions(state.uri.matchingRoute)),
           locationBuilder: RoutesLocationBuilder(
             routes: {},
           )),

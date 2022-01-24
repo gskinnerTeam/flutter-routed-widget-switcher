@@ -1,7 +1,7 @@
-import 'package:beamer/beamer.dart';
 import 'package:example/router_examples/beamer_app.dart';
 import 'package:example/router_examples/go_router_app.dart';
 import 'package:example/router_examples/routermaster_app.dart';
+import 'package:example/router_examples/url_router.dart';
 import 'package:example/router_examples/vrouter_app.dart';
 import 'package:example/widgets.dart';
 import 'package:flutter/material.dart';
@@ -25,16 +25,22 @@ void main() async {
     await runTest(tester, nav.context.go);
   });
 
-  testWidgets('Beamer', (WidgetTester tester) async {
-    await tester.pumpWidget(BeamerApp());
-    BeamerAppState beamer = tester.state(find.byType(BeamerApp));
-    await runTest(tester, (s) => beamer.routerDelegate.beamToNamed(s));
-  });
+  // testWidgets('Beamer', (WidgetTester tester) async {
+  //   await tester.pumpWidget(BeamerApp());
+  //   BeamerAppState beamer = tester.state(find.byType(BeamerApp));
+  //   await runTest(tester, (s) => beamer.routerDelegate.beamToNamed(s));
+  // });
 
   testWidgets('Routemaster', (WidgetTester tester) async {
     await tester.pumpWidget(RouteMasterApp());
     RouteMasterAppState router = tester.state(find.byType(RouteMasterApp));
     await runTest(tester, (s) => router.delegate.push(s));
+  });
+
+  testWidgets('UrlRouter', (WidgetTester tester) async {
+    await tester.pumpWidget(UrlRouterApp());
+    UrlRouterAppState router = tester.state(find.byType(UrlRouterApp));
+    await runTest(tester, (s) => router.urlRouter.url = s);
   });
 }
 

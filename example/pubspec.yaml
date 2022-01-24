@@ -40,6 +40,7 @@ dependencies:
   vrouter: ^1.2.0+15
   routemaster: ^0.9.5
   beamer: ^1.2.0
+  url_router: ^0.2.0+4
 
 dev_dependencies:
   flutter_test:

@@ -18,6 +18,7 @@ class _VRouterAppState extends State<VRouterApp> {
       child: VRouter(
           key: _vRouterKey,
           builder: (_, navigator) {
+            // Wrap the navigator in a simple scaffold, with a persistent `SideBar` on the left
             return Row(
               children: [
                 const SideBar(),

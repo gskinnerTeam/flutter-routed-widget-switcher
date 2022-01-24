@@ -1,4 +1,3 @@
-import 'package:example/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -27,8 +26,9 @@ class PageScaffoldWithInstructions extends StatelessWidget {
 
 /// A scaffold meant to contain entire apps so we can test multiple router implementations quickly.
 class MultiAppTestRig extends StatefulWidget {
-  const MultiAppTestRig({Key? key, required this.tests}) : super(key: key);
+  const MultiAppTestRig({Key? key, required this.tests, required this.testNames}) : super(key: key);
   final List<WidgetBuilder> tests;
+  final List<String> testNames;
 
   @override
   State<MultiAppTestRig> createState() => _MultiAppTestRigState();
@@ -50,7 +50,7 @@ class _MultiAppTestRigState extends State<MultiAppTestRig> with SingleTickerProv
           ),
           TabBar(
               controller: _tabs,
-              tabs: ['GoRouter', 'VRouter', 'RouteMaster', 'Beamer'].map((e) {
+              tabs: widget.testNames.map((e) {
                 return Padding(
                   padding: const EdgeInsets.all(20),
                   child: Text(e, style: TextStyle(color: Colors.black)),
@@ -88,7 +88,7 @@ class KeyboardTestHarness extends StatelessWidget {
       return MapEntry(SingleActivator(key), () => setLocation(value));
     });
     return Focus(
-      autofocus: true,
+      autofocus: true, // TODO: Remove this junk widget
       child: CallbackShortcuts(bindings: bindings, child: child),
     );
   }
@@ -96,7 +96,7 @@ class KeyboardTestHarness extends StatelessWidget {
 
 /// Stub
 class MainMenu extends StatelessWidget {
-  const MainMenu({Key? key}) : super(key: key);
+  MainMenu({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Container(
@@ -109,7 +109,7 @@ class MainMenu extends StatelessWidget {
 
 /// Stub
 class DashboardMenu extends StatelessWidget {
-  const DashboardMenu({Key? key}) : super(key: key);
+  DashboardMenu({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Container(
@@ -122,7 +122,7 @@ class DashboardMenu extends StatelessWidget {
 
 /// Stub
 class SettingsMenu extends StatelessWidget {
-  const SettingsMenu({Key? key}) : super(key: key);
+  SettingsMenu({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Container(
