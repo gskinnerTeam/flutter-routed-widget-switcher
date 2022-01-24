@@ -13,57 +13,6 @@ void main() {
     return PathSwitcher(key: switcherKey, path: path, builders: builders, caseSensitive: caseSensitive);
   }
 
-  RoutedInfo? info;
-  Future<void> pumpNestedApp(WidgetTester tester, String path, {bool exact = false}) async {
-    await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-            body: buildSwitcher(
-                path: path,
-                builders: (_) => [
-                      Routed('a', () {
-                        return PathSwitcher(
-                            path: path,
-                            builders: (i) {
-                              info = i;
-                              return [
-                                Routed(':id', () {
-                                  return PathSwitcher(
-                                      path: path,
-                                      builders: (i) {
-                                        info = i;
-                                        return [
-                                          Routed('c', () => Text('c'), prefix: !exact),
-                                        ];
-                                      });
-                                })
-                              ];
-                            });
-                      })
-                    ]))));
-  }
-
-  /// Test multiple relative urls
-  testWidgets('nested', (tester) async {
-    void testNestedRoutes(String expectedText) {
-      expect(find.text(expectedText), findsOneWidget);
-      expect(info?.queryParams, {'a': '1'});
-      expect(info?.pathParams, {'id': '99'});
-      expect(info?.pathParams != {'id': '1'}, true);
-    }
-
-    await pumpNestedApp(tester, '/');
-    expect(find.text('c'), findsNothing);
-
-    await pumpNestedApp(tester, '/a/99/c?a=1');
-    testNestedRoutes('c');
-
-    await pumpNestedApp(tester, '/a/99/c/?a=1');
-    testNestedRoutes('c');
-
-    await pumpNestedApp(tester, '/a/99/c/?a=1', exact: true);
-    expect(find.byType(DefaultUnknownRoute), findsOneWidget);
-  });
-
   testWidgets('general tests', (tester) async {
     await tester.pumpWidget(buildSwitcher(
         path: '/',
@@ -166,5 +115,60 @@ void main() {
     /// '/test' should match
     match = switcher.findRoutedWidget('/test');
     expect(match!.value, '/test');
+  });
+
+  /// Basic nesting example, more tests are in /example/test/nested_test.dart
+  RoutedInfo? info;
+  Future<void> pumpNestedApp(WidgetTester tester, String path, {bool exact = false}) async {
+    await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+            body: buildSwitcher(
+                path: path,
+                builders: (_) => [
+                      Routed('a', () {
+                        return PathSwitcher(
+                            path: path,
+                            builders: (i) {
+                              info = i;
+                              return [
+                                Routed(':id', () {
+                                  return PathSwitcher(
+                                      path: path,
+                                      builders: (i) {
+                                        info = i;
+                                        return [Routed('c', () => Text('c'), prefix: !exact)];
+                                      });
+                                })
+                              ];
+                            });
+                      })
+                    ]))));
+  }
+
+  /// Test multiple relative urls
+  testWidgets('nested', (tester) async {
+    void testNestedRoutes(String expectedText, {bool hasQueryParams = true}) {
+      expect(find.text(expectedText), findsOneWidget);
+      if (hasQueryParams) {
+        expect(info?.queryParams, {'a': '1'});
+      }
+      expect(info?.pathParams, {'id': '99'});
+      expect(info?.pathParams != {'id': '1'}, true);
+    }
+
+    await pumpNestedApp(tester, '/');
+    expect(find.text('c'), findsNothing);
+
+    await pumpNestedApp(tester, '/a/99/c');
+    testNestedRoutes('c', hasQueryParams: false);
+
+    await pumpNestedApp(tester, '/a/99/c?a=1');
+    testNestedRoutes('c');
+
+    await pumpNestedApp(tester, '/a/99/c/?a=1');
+    testNestedRoutes('c');
+
+    await pumpNestedApp(tester, '/a/99/c/?a=1', exact: true);
+    expect(find.byType(DefaultUnknownRoute), findsOneWidget);
   });
 }

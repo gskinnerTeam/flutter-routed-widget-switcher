@@ -1,4 +1,4 @@
-name: third-party-router-tests
+name: test-third-party-routers
 on: [push, pull_request, workflow_dispatch]
 jobs:
   drive:
