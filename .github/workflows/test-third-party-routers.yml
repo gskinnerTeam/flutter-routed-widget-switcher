@@ -12,5 +12,4 @@ jobs:
            cd example
            flutter config --enable-windows-desktop
            flutter pub get
-           flutter create .
            flutter test -d windows integration_test/third_party_router_tests.dart
