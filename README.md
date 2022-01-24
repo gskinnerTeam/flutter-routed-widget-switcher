@@ -33,7 +33,7 @@ dependencies:
 ## 🕹️ Usage
 Place the widget anywhere below the root `Router` widget and define the paths you would like to match. By default paths are considered to be case-insensitive, and treated as prefixes, but this can be disabled using the `.exact` extension method, or `usePrefix: false` setting.
 
-All widgets are lazy loaded, and can be defined using a closure (`() => MyPage`) or a constructor tear-off(`MyPage.new`)
+All widgets are lazy loaded, and can be defined using a closure: `() => MyPage` or a constructor tear-off: `MyPage.new`:
 ```dart
 return RoutedSwitcher(
   caseSensitive: true,
@@ -42,7 +42,7 @@ return RoutedSwitcher(
     Routed('/', MainMenu.new).exact,
      // match anything prefixed with `/dashboard`
     Routed('/dashboard', DashboardMenu.new),
-    // use a closure, so we can access the info object to get path or query params
+    // use the closure, so we can access query params
     Routed('/settings', () => SettingsMenu(type: info.queryParams['type'])),
   ],
 );
@@ -64,7 +64,7 @@ Paths can be defined as simple strings like `/user/new` or `user/:userId`, or us
 In addition to the matching performed by `pathToRegExp`, a wildcard `*` character can be used to match any location.
 
 ### Most specific match
-`RoutedSwitcher` will attempt to use the most specific match. For example,the location of `/users/new` matches all three of these builders:
+`RoutedSwitcher` will attempt to use the most specific match. For example, the url `/users/new` matches all three of these builders:
 ```dart
 Routed('/users/:userId', TeamDetails.new),
 Routed('/users/new', NewTeamForm.new),
