@@ -1,5 +1,5 @@
 <a href="https://github.com/gskinnerTeam/flutter-routed-widget-switcher/actions"><img src="https://github.com/gskinnerTeam/flutter-routed-widget-switcher/workflows/core-tests/badge.svg" alt="Build Status"></a>
-<a href="https://github.com/gskinnerTeam/flutter-routed-widget-switcher/actions"><img src="https://github.com/gskinnerTeam/flutter-routed-widget-switcher/workflows/third-party-router-tests/badge.svg" alt="Build Status"></a>[![codecov](https://codecov.io/gh/gskinnerTeam/flutter-routed-widget-switcher/branch/master/graph/badge.svg?token=V2IASQ1CT5)](https://codecov.io/gh/gskinnerTeam/flutter-routed-widget-switcher)
+<a href="https://github.com/gskinnerTeam/flutter-routed-widget-switcher/actions"><img src="https://github.com/gskinnerTeam/flutter-routed-widget-switcher/workflows/third-party-router-tests/badge.svg" alt="Build Status"></a> [![codecov](https://codecov.io/gh/gskinnerTeam/flutter-routed-widget-switcher/branch/master/graph/badge.svg?token=V2IASQ1CT5)](https://codecov.io/gh/gskinnerTeam/flutter-routed-widget-switcher)
 
 ## Features
 Declaratively switch child widgets based on the current `Router` location.
