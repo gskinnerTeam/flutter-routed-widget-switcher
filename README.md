@@ -7,10 +7,9 @@ Declaratively switch child widgets based on the current `Router` location.
 class SideBar extends StatelessWidget {
     Widget build(_){
      return RoutedSwitcher(
-        builders: (info) => [
-            // All widgets are lazy loaded...
-            Routed('/', () => MainMenu()), // use a closure
-            Routed('/dashboard', DashboardMenu.new), // or a tear-off :)
+        builders: (_) => [
+            Routed('/', MainMenu.new), 
+            Routed('/dashboard', DashboardMenu.new), 
         ]);
     }
 }
@@ -32,7 +31,9 @@ dependencies:
 
 
 ## 🕹️ Usage
-Place the widget anywhere below the root `Router` widget and define the paths you would like to match. By default paths are considered to be case-insensitive, and treated as prefixes, but this can be disabled:
+Place the widget anywhere below the root `Router` widget and define the paths you would like to match. By default paths are considered to be case-insensitive, and treated as prefixes, but this can be disabled using the `.exact` extension method, or `usePrefix: false` setting.
+
+All widgets are lazy loaded, and can be defined using a closure (`() => MyPage`) or a constructor tear-off(`MyPage.new`)
 ```dart
 return RoutedSwitcher(
   caseSensitive: true,
@@ -41,18 +42,18 @@ return RoutedSwitcher(
     Routed('/', MainMenu.new).exact,
      // match anything prefixed with `/dashboard`
     Routed('/dashboard', DashboardMenu.new),
-    // use the info object to get path or query params
+    // use a closure, so we can access the info object to get path or query params
     Routed('/settings', () => SettingsMenu(type: info.queryParams['type'])),
   ],
 );
 ```
-The `builders` delegate passes a `RoutedInfo` object which contains info about the current match, including:
+As shown above, the `builders` delegate passes a `RoutedInfo` object which contains info about the current match. This includes:
 * url
 * matchingRoute
 * pathParams
 * queryParams
 
-You can also call `RoutedInfo.of(context)` from any descendant widgets to lookup the closest instance.
+You can also call `RoutedInfo.of(context)` from any descendant widgets to access the info on demand.
 
 #### Unknown routes
 Use the `unknownRouteBuilder` to handle unexpected routes. If the delegate is not provided, a `DefaultUnknownRoute` widget will be used.
