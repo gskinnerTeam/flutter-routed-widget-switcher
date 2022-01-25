@@ -1,3 +1,6 @@
+## 2.1.0
+* Removed unused relativePaths setting
+
 ## 2.0.1
 * Improved router binding code
 

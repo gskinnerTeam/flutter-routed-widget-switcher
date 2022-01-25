@@ -13,7 +13,6 @@ class RoutedSwitcher extends StatefulWidget {
     this.duration,
     this.transitionBuilder,
     this.caseSensitive = false,
-    this.relativePaths = false,
     this.unknownRouteBuilder,
   }) : super(key: key);
 
@@ -29,8 +28,6 @@ class RoutedSwitcher extends StatefulWidget {
 
   /// Whether to treat paths as case sensitive or not. Can be over-ridden on a per path basis.
   final bool caseSensitive;
-
-  final bool relativePaths;
 
   @override
   State<RoutedSwitcher> createState() => RoutedSwitcherState();
